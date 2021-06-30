@@ -1,7 +1,3 @@
-let enddemin = 0
-let enddehr = 0
-let schedulestartmin = 0
-let where = 0
 let temporary = ""
 let subject = ""
 let finmin = 0
@@ -9,6 +5,10 @@ let finhr = 0
 let min = 0
 let hr = 0
 let time1 = 0
+let enddemin = 0
+let enddehr = 0
+let schedulestartmin = 0
+let where = 0
 let go = 1
 let hour = 0
 let minute = 0
@@ -66,6 +66,67 @@ while (go == 1) {
 let done = 1
 let text_list = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 basic.forever(function () {
+    while (true) {
+        second += 1
+        basic.pause(1000)
+        if (second == 60) {
+            minute += 1
+            second = 0
+        }
+        if (minute == 60) {
+            hour += 1
+            minute = 0
+        }
+        if (hour == 24) {
+            hour += 0
+        }
+    }
+})
+basic.forever(function () {
+    if (go == 0) {
+        if (input.buttonIsPressed(Button.A)) {
+            _set = 1
+        }
+    }
+})
+basic.forever(function () {
+    if (done == 1 && _set == 0) {
+        if (hoursss.length > 0) {
+            where = hoursss.indexOf(hour)
+            schedulestartmin = minsss[where]
+            enddehr = endhr[where]
+            enddemin = endmin[where]
+            if (hour >= hoursss[where] && minute >= minsss[where] && (hour <= enddehr && minute <= enddemin)) {
+                pins.digitalWritePin(DigitalPin.P2, 1)
+            } else {
+                pins.digitalWritePin(DigitalPin.P2, 0)
+            }
+            if (hour >= hoursss[where] && minute >= minsss[where] && (hour <= enddehr && minute <= enddemin)) {
+                if (input.buttonIsPressed(Button.B)) {
+                    basic.showString("" + (sbj_list[where]))
+                }
+            }
+        }
+    }
+})
+basic.forever(function () {
+    if (_set == 0 && done == 1) {
+        if (hour >= 10) {
+            if (minute >= 10) {
+                basic.showString("" + hour + ":" + minute)
+            } else {
+                basic.showString("" + hour + ":" + "0" + minute)
+            }
+        } else {
+            if (minute >= 10) {
+                basic.showString("0" + hour + ":" + minute)
+            } else {
+                basic.showString("0" + hour + ":" + "0" + minute)
+            }
+        }
+    }
+})
+basic.forever(function () {
     if (done == 1 && go == 0) {
         if (_set == 1) {
             time1 = 0
@@ -120,67 +181,6 @@ basic.forever(function () {
             sbj_list.push(subject)
             subject = ""
             _set = 0
-        }
-    }
-})
-basic.forever(function () {
-    while (true) {
-        second += 1
-        basic.pause(1000)
-        if (second == 60) {
-            minute += 1
-            second = 0
-        }
-        if (minute == 60) {
-            hour += 1
-            minute = 0
-        }
-        if (hour == 24) {
-            hour += 0
-        }
-    }
-})
-basic.forever(function () {
-    if (go == 0) {
-        if (input.buttonIsPressed(Button.A)) {
-            _set = 1
-        }
-    }
-})
-basic.forever(function () {
-    if (_set == 0 && done == 1) {
-        if (hour >= 10) {
-            if (minute >= 10) {
-                basic.showString("" + hour + ":" + minute)
-            } else {
-                basic.showString("" + hour + ":" + "0" + minute)
-            }
-        } else {
-            if (minute >= 10) {
-                basic.showString("0" + hour + ":" + minute)
-            } else {
-                basic.showString("0" + hour + ":" + "0" + minute)
-            }
-        }
-    }
-})
-basic.forever(function () {
-    if (done == 1 && _set == 0) {
-        if (hoursss.length > 0) {
-            where = hoursss.indexOf(hour)
-            schedulestartmin = minsss[where]
-            enddehr = endhr[where]
-            enddemin = endmin[where]
-            if (hour >= hoursss[where] && minute >= minsss[where] && (hour <= enddehr && minute <= enddemin)) {
-                pins.digitalWritePin(DigitalPin.P2, 1)
-            } else {
-                pins.digitalWritePin(DigitalPin.P2, 0)
-            }
-            if (hour >= hoursss[where] && minute >= minsss[where] && (hour <= enddehr && minute <= enddemin)) {
-                if (input.buttonIsPressed(Button.B)) {
-                    basic.showString("" + (sbj_list[where]))
-                }
-            }
         }
     }
 })
